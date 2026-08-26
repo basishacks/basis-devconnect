@@ -5,19 +5,21 @@ const open = ref(false)
 const { user } = useUserSession()
 
 const links = [[{
-  label: 'Documentation',
+  label: 'Documentation', 
   icon: 'i-lucide-file',
   to: 'https://docs.biszweb.club/',
   target: '_blank'
 }], [{
   label: 'Home',
   icon: 'i-lucide-house',
-  to: '/',
-  exact: true,
-  onSelect: () => {
-    open.value = false
-  }
-}]] satisfies NavigationMenuItem[]
+  to: '/'
+}, 
+{
+  label: "Applications",
+  icon: "i-lucide-app-window",
+  to: "/applications"
+}
+]] satisfies NavigationMenuItem[]
 </script>
 
 <template>
