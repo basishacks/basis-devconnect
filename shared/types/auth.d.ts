@@ -1,23 +1,23 @@
-declare module '#auth-utils' {
+declare module "#auth-utils" {
   interface User {
-    id: string
-    name: string
-    email?: string
-    emailVerified?: boolean
+    id: string;
+    name: string;
+    email?: string;
+    emailVerified?: boolean;
   }
 
   interface SecureSessionData {
     basisAuthFlow?: {
-      state: string
-      nonce: string
-      codeVerifier: string
-      createdAt: number
-    }
+      state: string;
+      nonce: string;
+      codeVerifier: string;
+      createdAt: number;
+    };
   }
 
   interface UserSession {
-    loggedInAt?: number
+    loggedInAt?: number;
   }
 }
 
-export {}
+export {};

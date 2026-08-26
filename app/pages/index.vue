@@ -1,5 +1,7 @@
 <script setup lang="ts">
-
+useSeoMeta({
+  title: "Home",
+});
 </script>
 
 <template>
@@ -14,12 +16,8 @@
 
     <template #body>
       <div class="p-6 sm:p-8">
-        <h1 class="text-2xl font-semibold text-highlighted">
-          Welcome back!
-        </h1>
-        <p class="mt-3 text-muted">
-          This is the DevConnect portal.
-        </p>
+        <h1 class="text-2xl font-semibold text-highlighted">Welcome back!</h1>
+        <p class="mt-3 text-muted">This is the DevConnect portal.</p>
       </div>
     </template>
   </UDashboardPanel>

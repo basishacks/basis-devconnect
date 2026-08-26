@@ -1,25 +1,31 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from "@nuxt/ui";
 
-const open = ref(false)
-const { user } = useUserSession()
+const open = ref(false);
+const { user } = useUserSession();
 
-const links = [[{
-  label: 'Documentation', 
-  icon: 'i-lucide-file',
-  to: 'https://docs.biszweb.club/',
-  target: '_blank'
-}], [{
-  label: 'Home',
-  icon: 'i-lucide-house',
-  to: '/'
-}, 
-{
-  label: "Applications",
-  icon: "i-lucide-app-window",
-  to: "/applications"
-}
-]] satisfies NavigationMenuItem[]
+const links = [
+  [
+    {
+      label: "Documentation",
+      icon: "i-lucide-file",
+      to: "https://docs.biszweb.club/",
+      target: "_blank",
+    },
+  ],
+  [
+    {
+      label: "Home",
+      icon: "i-lucide-house",
+      to: "/",
+    },
+    {
+      label: "Applications",
+      icon: "i-lucide-app-window",
+      to: "/applications",
+    },
+  ],
+] satisfies NavigationMenuItem[];
 </script>
 
 <template>
@@ -54,13 +60,18 @@ const links = [[{
       <template #footer="{ collapsed }">
         <div class="flex items-center gap-2 px-2 py-1.5" aria-label="User">
           <UAvatar :alt="user?.name" icon="i-lucide-user" size="sm" />
-          <span v-if="!collapsed" class="truncate text-sm font-medium text-highlighted">
+          <span
+            v-if="!collapsed"
+            class="truncate text-sm font-medium text-highlighted"
+          >
             {{ user?.name || user?.email }}
           </span>
         </div>
       </template>
     </UDashboardSidebar>
 
-    <slot />
+    <div class="m-8">
+      <slot />
+    </div>
   </UDashboardGroup>
 </template>
