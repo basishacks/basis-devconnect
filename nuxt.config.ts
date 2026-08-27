@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
 
   runtimeConfig: {
+    basisAuthDatabase: {
+      url: "",
+    },
     basisAuth: {
       issuer: "http://localhost:3000",
       clientId: "b14c99b1-db96-4d76-b82b-9003f207c4f2",
@@ -36,11 +39,10 @@ export default defineNuxtConfig({
       },
     },
   },
-
   icon: {
     provider: "none",
     clientBundle: {
-      icons: ["lucide:code", "lucide:house", "lucide:user"],
+      scan: true,
     },
   },
 });

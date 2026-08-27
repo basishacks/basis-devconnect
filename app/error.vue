@@ -18,7 +18,7 @@ onMounted(() => {
     <NuxtLoadingIndicator />
 
     <NuxtLayout>
-      <div>
+      <div class="m-8">
         <h3 class="text-primary text-3xl bold">
           {{ error.statusCode }}
         </h3>

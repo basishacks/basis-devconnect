@@ -70,7 +70,7 @@ const links = [
       </template>
     </UDashboardSidebar>
 
-    <div class="m-8">
+    <div class="w-full">
       <slot />
     </div>
   </UDashboardGroup>
