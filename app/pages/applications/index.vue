@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import type { TableColumn } from "@nuxt/ui";
-
-interface Application {
-  name: string;
-  clientId: string;
-  updatedAt: string;
-}
-
-interface ApplicationsResponse {
-  items: Application[];
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-}
+import type {
+  ApplicationsResponse,
+  ApplicationSummary,
+} from "~~/shared/types/applications";
 
 const description =
   "Use DevConnect Applications to connect BASIS OpenID to your applications.";
@@ -27,7 +17,7 @@ useSeoMeta({
   description,
 });
 
-const columns: TableColumn<Application>[] = [
+const columns: TableColumn<ApplicationSummary>[] = [
   {
     accessorKey: "name",
     header: "Application Name",
@@ -35,6 +25,10 @@ const columns: TableColumn<Application>[] = [
   {
     accessorKey: "clientId",
     header: "Client ID",
+  },
+  {
+    accessorKey: "clientType",
+    header: "Type",
   },
   {
     accessorKey: "updatedAt",
@@ -88,8 +82,21 @@ const {
 
     <template #body>
       <div class="p-6 sm:p-8">
-        <h1 class="text-3xl font-semibold text-highlighted">Applications</h1>
-        <p class="mt-3 text-muted">{{ description }}</p>
+        <div
+          class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
+        >
+          <div>
+            <h1 class="text-3xl font-semibold text-highlighted">
+              Applications
+            </h1>
+            <p class="mt-3 text-muted">{{ description }}</p>
+          </div>
+          <UButton
+            to="/applications/create"
+            icon="i-lucide-plus"
+            label="Register App"
+          />
+        </div>
 
         <div
           class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
@@ -125,8 +132,33 @@ const {
           :loading="status === 'pending'"
           empty="No applications found."
         >
+          <template #name-cell="{ row }">
+            <ULink
+              :to="`/applications/${encodeURIComponent(row.original.clientId)}`"
+              class="font-medium text-primary hover:underline"
+            >
+              {{ row.original.name }}
+            </ULink>
+            <UBadge
+              v-if="row.original.canManage"
+              class="ml-2"
+              color="primary"
+              variant="subtle"
+              label="Admin"
+            />
+          </template>
+
           <template #clientId-cell="{ row }">
             <code class="text-sm text-muted">{{ row.original.clientId }}</code>
+          </template>
+
+          <template #clientType-cell="{ row }">
+            <UBadge
+              color="neutral"
+              variant="subtle"
+              class="capitalize"
+              :label="row.original.clientType"
+            />
           </template>
 
           <template #updatedAt-cell="{ row }">
@@ -135,6 +167,7 @@ const {
               relative
               numeric="auto"
               :title="true"
+              locale="en-US"
             />
           </template>
         </UTable>

@@ -1,20 +1,19 @@
 import { createError, getQuery } from "h3";
+import type { ApplicationsResponse } from "~~/shared/types/applications";
+import {
+  applicationSummaryFromRow,
+  type ApplicationDatabaseRow,
+} from "~~/server/utils/applications";
 
 const APPLICATIONS_PER_PAGE = 50;
 const MAX_SEARCH_LENGTH = 100;
-
-interface ApplicationRow {
-  name: string;
-  clientId: string;
-  updatedAt: Date;
-}
 
 interface ApplicationCount {
   count: number;
 }
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+  const session = await requireUserSession(event);
 
   const query = getQuery(event);
   const page = query.page === undefined ? 1 : Number(query.page);
@@ -38,11 +37,15 @@ export default defineEventHandler(async (event) => {
     const database = getBasisAuthDatabase(event);
     const offset = (page - 1) * APPLICATIONS_PER_PAGE;
     const [applications, count] = await Promise.all([
-      database.query<ApplicationRow>(
+      database.query<ApplicationDatabaseRow>(
         `
           select
-            coalesce(nullif(metadata->>'name', ''), client_id) as name,
             client_id as "clientId",
+            metadata,
+            resources,
+            require_consent as "requireConsent",
+            filter_mode as "filterMode",
+            filter_content as "filterContent",
             updated_at as "updatedAt"
           from oidc_clients
           where $1 = ''
@@ -67,12 +70,14 @@ export default defineEventHandler(async (event) => {
     const total = count.rows[0]?.count ?? 0;
 
     return {
-      items: applications.rows,
+      items: applications.rows.map((application) =>
+        applicationSummaryFromRow(application, session.user.id),
+      ),
       page,
       pageSize: APPLICATIONS_PER_PAGE,
       total,
       totalPages: Math.ceil(total / APPLICATIONS_PER_PAGE),
-    };
+    } satisfies ApplicationsResponse;
   } catch {
     throw createError({
       statusCode: 503,
